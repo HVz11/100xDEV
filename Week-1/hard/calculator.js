@@ -16,6 +16,88 @@
   Once you've implemented the logic, test your code by running
 */
 
-class Calculator {}
+class Calculator {
+  constructor() {
+    this.result = 0;
+  }
+
+  add(number) {
+    this.result += number;
+    return this;
+  }
+
+  subtract(number) {
+    this.result -= number;
+    return this;
+  }
+
+  multiply(number) {
+    this.result *= number;
+    return this;
+  }
+
+  divide(number) {
+    if (number === 0) {
+      throw new Error("Division by zero is not allowed");
+    }
+    this.result /= number;
+    return this;
+  }
+
+  clear() {
+    this.result = 0;
+    return this;
+  }
+
+  getResult() {
+    return this.result;
+  }
+
+  calculate(expression) {
+    const operations = ["+", "-", "*", "/"];
+    let lastCharWasOperation = false;
+    let numberBuffer = "";
+    let operationBuffer = "";
+
+    for (let i = 0; i < expression.length; i++) {
+      const char = expression[i];
+
+      if (char === " ") {
+        continue;
+      }
+
+      if (operations.includes(char)) {
+        if (lastCharWasOperation) {
+          throw new Error("Unexpected character after an operation");
+        }
+        lastCharWasOperation = true;
+        operationBuffer += char;
+      } else {
+        lastCharWasOperation = false;
+        numberBuffer += char;
+      }
+    }
+
+    const number = parseFloat(numberBuffer);
+    if (isNaN(number)) {
+      throw new Error("Invalid number");
+    }
+
+    const operation = operationBuffer[operationBuffer.length - 1];
+    if (operation === "+") {
+      this.add(number);
+    } else if (operation === "-") {
+      this.subtract(number);
+    } else if (operation === "*") {
+      this.multiply(number);
+    } else if (operation === "/") {
+      this.divide(number);
+    } else {
+      throw new Error("Invalid operation");
+    }
+
+    return this;
+  }
+}
 
 module.exports = Calculator;
