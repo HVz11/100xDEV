@@ -5,6 +5,16 @@
  */
 
 function sleep(milliseconds) {
+  return new Promise((resolve) => {
+    const start = Atomics.load(new Int32Array(new SharedArrayBuffer(4)), 0);
+    while (
+      Atomics.load(new Int32Array(new SharedArrayBuffer(4)), 0) - start <
+      milliseconds
+    ) {
+      // Do nothing
+    }
+    resolve();
+  });
 }
 
 module.exports = sleep;
